@@ -1,0 +1,50 @@
+# ==============================================================================
+# SCRIPT DE EJECUCIÓN PARTE 2
+# Tarea Computacional 1 - Optimización
+# Universidad Diego Portales - Escuela de Ingeniería Industrial
+# ==============================================================================
+
+reset;
+model parte2.mod;
+data parte2.dat;
+
+option solver cplex; # o gurobi, cbc, glpk
+solve;
+
+printf "\n======================================================================\n";
+printf "           RESULTADOS DE LA OPTIMIZACIÓN - PARTE 2 (RRHH)             \n";
+printf "======================================================================\n";
+printf "Estado de la solución:       %s\n", solve_result;
+printf "Beneficio Neto Total Anual:  $%.2f\n", Beneficio_Neto;
+printf "Ingresos Totales por Ventas: $%.2f\n", sum {p in PRODUCTOS, t in PERIODOS} Utilidad[p,t] * V[p,t];
+printf "Costos de Inventario:        $%.2f\n", sum {p in PRODUCTOS, t in PERIODOS} CostoInv[t] * I[p,t];
+printf "Costos de Mano de Obra Reg:  $%.2f\n", sum {t in PERIODOS} CostoReg[t] * W[t];
+printf "Costos de Horas Extras:      $%.2f\n", sum {t in PERIODOS} CostoExt[t] * O[t];
+printf "Costos de Contratación:      $%.2f\n", sum {t in PERIODOS} CostoContr[t] * H[t];
+printf "Costos de Despido:           $%.2f\n", sum {t in PERIODOS} CostoDesp[t] * F[t];
+printf "TOTAL COSTOS OPERATIVOS:     $%.2f\n", 
+    sum {p in PRODUCTOS, t in PERIODOS} CostoInv[t] * I[p,t] +
+    sum {t in PERIODOS} (CostoReg[t]*W[t] + CostoExt[t]*O[t] + CostoContr[t]*H[t] + CostoDesp[t]*F[t]);
+
+printf "\n----------------- PLAN DE PRODUCCIÓN (X) -----------------\n";
+display X;
+
+printf "\n------------------- PLAN DE VENTAS (V) -------------------\n";
+display V;
+
+printf "\n---------------- INVENTARIO FINAL EN BODEGA --------------\n";
+display I;
+
+printf "\n----------------- GESTIÓN DE RECURSOS HUMANOS ------------\n";
+printf "%5s %10s %10s %10s %10s %12s %12s\n", "Mes", "Dotación W", "Contrata H", "Despide F", "Sobretiempo O", "Req HH Prod", "Horas Disp";
+for {t in PERIODOS} {
+    printf "%5d %10.2f %10.2f %10.2f %10.2f %12.2f %12.2f\n", 
+        t, 
+        W[t], 
+        H[t], 
+        F[t], 
+        O[t], 
+        RequerimientoHH * (sum {p in PRODUCTOS} X[p,t]),
+        W[t] + O[t];
+}
+printf "======================================================================\n";

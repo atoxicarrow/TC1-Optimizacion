@@ -1,0 +1,44 @@
+# ==============================================================================
+# DATOS PARTE 2: PLANIFICACIÓN INTEGRADA CON RECURSOS HUMANOS
+# Tarea Computacional 1 - Optimización
+# Universidad Diego Portales - Escuela de Ingeniería Industrial
+# ==============================================================================
+
+set PERIODOS := 1 2 3 4 5 6 7 8 9 10 11 12;
+set PRODUCTOS := A B;
+
+param InvInicial :=
+    A 10
+    B 10;
+
+param DotacionInicial := 300;
+param RequerimientoHH := 3;
+
+param Demanda:
+        1   2   3   4   5   6   7   8   9   10  11  12 :=
+    A   73  60  48  66  63  48  57  68  52  76  67  76
+    B   63  72  57  67  44  59  48  64  40  63  64  77;
+
+param Utilidad:
+        1   2   3   4   5   6   7   8   9   10  11  12 :=
+    A   8   22  6   32  28  14  20  36  10  6   40  22
+    B   20  16  20  6   20  29  8   30  6   8   6   28;
+
+param HorasMaq:
+        1   2   3   4   5   6   7   8   9   10  11  12 :=
+    A   0.1 2.0 0.9 1.2 1.8 0.7 0.8 0.4 1.5 2.1 1.9 1.5
+    B   0.2 1.9 0.7 1.7 0.8 1.6 1.0 0.6 1.5 0.3 2.0 1.4;
+
+param: CapacidadMaq CostoInv InvSeg InvMax CostoReg CostoExt CostoContr CostoDesp :=
+    1  180          3        6      30     2.8      3.4      0.8        2.0
+    2  180          5        7      30     0.6      0.9      0.4        1.0
+    3  160          2        10     27     2.8      3.4      0.9        1.0
+    4  190          4        5      24     1.0      2.0      0.3        1.0
+    5  130          2        10     25     2.5      3.2      0.3        1.0
+    6  160          4        7      21     0.8      1.3      0.4        0.5
+    7  160          2        7      21     1.4      2.5      1.2        0.5
+    8  130          6        10     25     1.5      2.2      0.2        0.5
+    9  140          2        5      22     3.6      4.0      0.7        1.0
+    10 150          2        7      25     3.2      4.1      0.3        1.0
+    11 150          4        9      22     4.2      5.2      1.2        1.0
+    12 150          2        8      30     2.6      3.7      1.1        1.0;

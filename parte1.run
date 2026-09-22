@@ -1,0 +1,40 @@
+# ==============================================================================
+# SCRIPT DE EJECUCIÓN PARTE 1
+# Tarea Computacional 1 - Optimización
+# Universidad Diego Portales - Escuela de Ingeniería Industrial
+# ==============================================================================
+
+reset;
+model parte1.mod;
+data parte1.dat;
+
+option solver cplex; # o gurobi, cbc, glpk
+solve;
+
+printf "\n==========================================================\n";
+printf "           RESULTADOS DE LA OPTIMIZACIÓN - PARTE 1        \n";
+printf "==========================================================\n";
+printf "Estado de la solución: %s\n", solve_result;
+printf "Beneficio Neto Anual:  $%.2f\n", Beneficio_Neto;
+printf "Ingresos Totales:      $%.2f\n", sum {p in PRODUCTOS, t in PERIODOS} Utilidad[p,t] * V[p,t];
+printf "Costos de Inventario:  $%.2f\n", sum {p in PRODUCTOS, t in PERIODOS} CostoInv[t] * I[p,t];
+
+printf "\n----------------- PLAN DE PRODUCCIÓN (X) -----------------\n";
+display X;
+
+printf "\n------------------- PLAN DE VENTAS (V) -------------------\n";
+display V;
+
+printf "\n---------------- INVENTARIO FINAL EN BODEGA --------------\n";
+display I;
+
+printf "\n------------ USO DE CAPACIDAD DE MAQUINARIA (HR) ---------\n";
+printf "%5s %12s %12s %10s\n", "Mes", "Horas Uso", "Capacidad", "Holgura";
+for {t in PERIODOS} {
+    printf "%5d %12.2f %12.2f %10.2f\n", 
+        t, 
+        sum {p in PRODUCTOS} HorasMaq[p,t] * X[p,t], 
+        CapacidadMaq[t], 
+        CapacidadMaq[t] - sum {p in PRODUCTOS} HorasMaq[p,t] * X[p,t];
+}
+printf "==========================================================\n";
