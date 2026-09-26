@@ -1,14 +1,10 @@
-# ==============================================================================
-# SCRIPT DE EJECUCIÓN PARTE 2
-# Tarea Computacional 1 - Optimización
-# Universidad Diego Portales - Escuela de Ingeniería Industrial
-# ==============================================================================
+# pt2 run
 
 reset;
 model parte2.mod;
 data parte2.dat;
 
-option solver cplex; # o gurobi, cbc, glpk
+option solver cplex;
 solve;
 
 printf "\n======================================================================\n";

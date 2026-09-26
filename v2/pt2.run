@@ -1,0 +1,39 @@
+# ==============================================================================
+# SCRIPT DE EJECUCIÓN PARTE 2 (v2)
+# ==============================================================================
+
+reset;
+model parte2_adaptado.mod;
+data pt2.dat;
+
+option solver cplex; # o gurobi, cbc, glpk
+solve;
+
+printf "\n======================================================================\n";
+printf "           RESULTADOS DE LA OPTIMIZACIÓN - PARTE 2 (RRHH)             \n";
+printf "======================================================================\n";
+printf "Estado de la solución:      %s\n", solve_result;
+printf "Utilidad Total Neta Anual:  $%.2f\n", Utilidad_Total;
+printf "Ingresos Totales por Ventas: $%.2f\n", sum {p in P, t in T} utilidad[p,t] * v[p,t];
+printf "Costos de Inventario:       $%.2f\n", sum {p in P, t in T} costo_inventario[t] * i[p,t];
+printf "Costos Mano de Obra Regular: $%.2f\n", sum {t in T} costo_regular[t] * w[t];
+printf "Costos Horas Extras:        $%.2f\n", sum {t in T} costo_horas_extras[t] * o[t];
+printf "Costos de Contratación:     $%.2f\n", sum {t in T} costo_contratacion[t] * h[t];
+printf "Costos de Despido:          $%.2f\n", sum {t in T} costo_despido[t] * f[t];
+
+printf "\n--- Producción (x) ---\n";
+display x;
+
+printf "\n--- Ventas (v) ---\n";
+display v;
+
+printf "\n--- Inventario Final (i) ---\n";
+display i;
+
+printf "\n--- Dotación y Horas de Mano de Obra ---\n";
+printf "%5s %10s %10s %10s %10s %12s\n", "Mes", "Dotación w", "Contrata h", "Despide f", "Extras o", "Req HH Prod";
+for {t in T} {
+    printf "%5d %10.2f %10.2f %10.2f %10.2f %12.2f\n", 
+        t, w[t], h[t], f[t], o[t], requerimiento_hh * (sum {p in P} x[p,t]);
+}
+printf "======================================================================\n";

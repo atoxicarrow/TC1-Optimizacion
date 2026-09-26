@@ -1,0 +1,26 @@
+# ==============================================================================
+# SCRIPT DE EJECUCIÓN PARTE 1 (v2)
+# ==============================================================================
+
+reset;
+model parte1_corregido.mod;
+data pt1.dat;
+
+option solver cplex; # o gurobi, cbc, glpk
+solve;
+
+printf "\n==========================================================\n";
+printf "           RESULTADOS DE LA OPTIMIZACIÓN - PARTE 1        \n";
+printf "==========================================================\n";
+printf "Utilidad Total Anual: $%.2f\n", Utilidad_Total;
+printf "Ingresos por Ventas:  $%.2f\n", sum {p in P, t in T} utilidad[p,t] * v[p,t];
+printf "Costos de Inventario: $%.2f\n", sum {p in P, t in T} costo_inventario[t] * i[p,t];
+
+printf "\n--- Producción (x) ---\n";
+display x;
+
+printf "\n--- Ventas (v) ---\n";
+display v;
+
+printf "\n--- Inventario Final (i) ---\n";
+display i;
